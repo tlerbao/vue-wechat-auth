@@ -50,11 +50,6 @@ router.beforeEach(async (to, from, next) => {
  * @returns {string}
  */
 function processUrl() {
-  // 本地环境换通过auth.html拿code
-  if (process.env.NODE_ENV === 'development') {
-    // 中间授权页地址
-     return `${process.env.VUE_APP_WECHAT_AUTH_URL}?backUrl=${window.location.href}`
-  }
   const url = window.location.href
   // 解决多次登录url添加重复的code与state问题
   const urlParams = qs.parse(url.split('?')[1])
@@ -68,6 +63,11 @@ function processUrl() {
     } else {
       redirectUrl = `${url.split('?')[0]}`
     }
+  }
+  // 本地环境换通过auth.html拿code
+  if (process.env.NODE_ENV === 'development') {
+    // 中间授权页地址
+     return `${process.env.VUE_APP_WECHAT_AUTH_URL}?backUrl=${redirectUrl}`
   }
   return redirectUrl
 }
